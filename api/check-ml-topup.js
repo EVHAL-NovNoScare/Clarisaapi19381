@@ -1,12 +1,22 @@
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
+module.exports = async (req, res) => {
+  // Izinkan GET & POST
+  if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { user_id, zone_id } = req.body;
+    let user_id, zone_id;
+    
+    if (req.method === 'POST') {
+      const body = JSON.parse(req.body || '{}');
+      user_id = body.user_id;
+      zone_id = body.zone_id;
+    } else {
+      // GET: ambil dari query string
+      user_id = req.query.user_id || '123456789';
+      zone_id = req.query.zone_id || '1011';
+    }
 
-    // Validasi input
     if (!user_id || !zone_id) {
       return res.status(400).json({
         status: false,
@@ -14,8 +24,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // LOGIC: Cek dari database/eksternal API
-    // Contoh dummy logic:
+    // Dummy logic
     const hasPurchased50 = Math.random() > 0.5;
     const hasPurchased150 = Math.random() > 0.7;
     const hasPurchased250 = Math.random() > 0.8;
@@ -26,7 +35,7 @@ export default async function handler(req, res) {
       data: {
         user_id,
         zone_id,
-        nickname: "PanelPedia", // Ambil dari game API
+        nickname: "PanelPedia",
         country: "Indonesia",
         rechargeBonus: [
           { diamonds: "50+50", status: hasPurchased50 ? "Sudah pernah dibeli" : "Belum pernah dibeli" },
@@ -47,4 +56,4 @@ export default async function handler(req, res) {
       error: 'Internal server error' 
     });
   }
-}
+};
