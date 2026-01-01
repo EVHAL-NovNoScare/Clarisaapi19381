@@ -1,0 +1,12 @@
+{
+  "name": "ml-topup-checker",
+  "version": "1.0.0",
+  "description": "API cek first topup Mobile Legends",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}
